@@ -25,33 +25,37 @@ namespace Ежедн
     public partial class MainWindow : Window
     {
 
-        
+
+        List<string> meow = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
             DateTime dateTime= DateTime.Now;
             dat.Text = dateTime.ToString();
             List<serial> lll = serial.MyDeser<List<serial>>();
-            foreach (serial serial in lll)
+            foreach (serial Serial in lll.ToList())
             {
-                items?.Append(serial.name);
+                if (Serial.data == dat.DisplayDate.ToString()) {
+                    zametki.ItemsSource = lll;
+                    zametki.DisplayMemberPath = "name";
+                }
+                
             }
-            zametki.ItemsSource= items;
         }
 
-        string[] items;
+        string[] items = null;
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             List<serial> lll = serial.MyDeser<List<serial>>();
-            foreach (serial serial in lll) //Возможно ли перебирать это черех цикл фор? просто высылает ошибку, что у листа нет длины или что-то по типу того
+
+            foreach (serial serial in lll)
             {
-                if ((serial.name.Equals(nazv.Text) || serial.description.Equals(opis.Text))
-                    && serial.data.Equals(dat.Text))
+                if ((serial.name.Equals(nazv.Text) || serial.description.Equals(opis.Text)) && serial.data.Equals(dat.Text))
                 {
                     lll.Remove(serial);
                 }
             }
-            serial.MySeriali<List<serial>>(lll);
+            serial.MySeriali(lll);
 
         }
 
@@ -64,41 +68,69 @@ namespace Ежедн
             DateTime ddata = Convert.ToDateTime(dat.Text);
             lala.data = ddata.ToShortDateString();
             lll.Add(lala);
-            serial.MySeriali<List<serial>>(lll);
+            serial.MySeriali(lll);
+            foreach (serial Serial in lll.ToList())
+            {
+                if (Serial.data == dat.DisplayDate.ToString())
+                {
+                    zametki.ItemsSource = lll;
+                    zametki.DisplayMemberPath = "name";
+                }
+
+            }
+
         }
 
         private void Sohr_Click(object sender, RoutedEventArgs e)
         {
             List<serial> lll = serial.MyDeser<List<serial>>();
-            foreach (serial serial in lll)
+            foreach (serial serial in lll.ToList())
             {
-                if ((serial.name.Equals(nazv.Text) || serial.description.Equals(opis.Text))
-                    && serial.data.Equals(Convert.ToDateTime(dat.Text))) { 
+                if ((serial.name.Equals(nazv.Text)==true || serial.description.Equals(opis.Text)==true) && serial.data.Equals(Convert.ToDateTime(dat.Text))==true) { 
                     serial.name= nazv.Text;
                     serial.description= opis.Text;
                 }
             }
             serial.MySeriali<List<serial>>(lll);
+            foreach (serial Serial in lll.ToList())
+            {
+                if (Serial.data == dat.DisplayDate.ToString())
+                {
+                    zametki.ItemsSource = lll;
+                    zametki.DisplayMemberPath = "name";
+                }
+
+            }
         }
 
         private void dat_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+
             List<serial> lll = serial.MyDeser<List<serial>>();
-            foreach (serial serial in lll)
+            foreach (serial Serial in lll.ToList())
             {
-                items?.Append(serial.name);
+                if (Serial.data == dat.DisplayDate.ToString())
+                {
+                    zametki.ItemsSource = lll;
+                    zametki.DisplayMemberPath = "name";
+                }
+
             }
-            zametki.ItemsSource = items;
         }
 
         private void zametki_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var swl = zametki?.SelectedValue.ToString();
             List<serial> lll = serial.MyDeser<List<serial>>();
-            foreach (serial serial in lll)
+            foreach (serial serial in lll.ToList())
             {
-                nazv.Text = serial.name;
-                opis.Text = serial.description;
+                if (swl == serial.name)
+                {
+                    nazv.Text = serial.name;
+                    opis.Text = serial.description;
+                }
             }
-        }
+        }   
     }
 }
+
